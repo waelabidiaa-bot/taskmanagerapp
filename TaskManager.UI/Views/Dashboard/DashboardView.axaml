@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels.Dashboard"
+             xmlns:models="using:TaskManager.Core.Models"
+             x:Class="TaskManager.UI.Views.Dashboard.DashboardView"
+             x:DataType="vm:DashboardViewModel"
+             x:CompileBindings="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="16">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Dashboard" Classes="page-title" />
+                <TextBlock Text="A quick look at your workspace." Classes="muted" />
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Border Grid.Column="0" Classes="panel">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding TotalTasks}" FontSize="28" FontWeight="SemiBold" />
+                        <TextBlock Text="Total tasks" Classes="muted" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="1" Classes="panel">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding CompletedTasks}" FontSize="28" FontWeight="SemiBold" />
+                        <TextBlock Text="Completed" Classes="muted" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Classes="panel">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{Binding PendingTasks}" FontSize="28" FontWeight="SemiBold" />
+                        <TextBlock Text="Pending" Classes="muted" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <Border Grid.Column="0" Classes="panel">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Recent notes" Classes="section-title" />
+                        <ListBox ItemsSource="{Binding RecentNotes}"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 MaxHeight="280">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:Note">
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Summary}" Classes="summary"
+                                                   MaxLines="2" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding Content}" Classes="muted"
+                                                   MaxLines="1" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Classes="panel">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Study goals" Classes="section-title" />
+                        <ListBox ItemsSource="{Binding LearningActivities}"
+                                 Background="Transparent"
+                                 BorderThickness="0"
+                                 MaxHeight="280">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="models:LearningActivity">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding Status}" Classes="muted" />
+                                        <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8" />
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <TextBlock Text="{Binding Progress}" Classes="muted" />
+                                            <TextBlock Text="%" Classes="muted" />
+                                            <TextBlock Text="·" Classes="muted" />
+                                            <TextBlock Text="{Binding CompletedTasks}" Classes="muted" />
+                                            <TextBlock Text="/" Classes="muted" />
+                                            <TextBlock Text="{Binding Tasks.Count}" Classes="muted" />
+                                            <TextBlock Text="tasks done" Classes="muted" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

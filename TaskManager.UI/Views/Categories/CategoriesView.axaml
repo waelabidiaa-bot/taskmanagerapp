@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels.Categories"
+             xmlns:models="using:TaskManager.Core.Models"
+             x:Class="TaskManager.UI.Views.Categories.CategoriesView"
+             x:DataType="vm:CategoriesViewModel"
+             x:CompileBindings="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Categories" Classes="page-title" />
+                <TextBlock Text="Reusable labels for tasks and notes." Classes="muted" />
+            </StackPanel>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Category name" Classes="field-label" />
+                    <TextBox Text="{Binding Name, Mode=TwoWay}" PlaceholderText="For example: Work, Personal, Ideas" />
+                    <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Save category" Command="{Binding SaveCategoryCommand}" Classes="primary" />
+                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Your categories" Classes="section-title" />
+                    <ListBox ItemsSource="{Binding Categories}"
+                             SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             MaxHeight="360">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:Category">
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button Content="Delete" Command="{Binding DeleteCategoryCommand}" Classes="danger" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

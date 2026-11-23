@@ -1,0 +1,148 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels.Notes"
+             xmlns:models="using:TaskManager.Core.Models"
+             xmlns:converters="using:Avalonia.Data.Converters"
+             x:Class="TaskManager.UI.Views.Notes.NotesView"
+             x:DataType="vm:NotesViewModel"
+             x:CompileBindings="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Notes" Classes="page-title" />
+                <TextBlock Text="Summarize what you study and attach notes to tasks." Classes="muted" />
+            </StackPanel>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Note editor" Classes="section-title" />
+
+                    <TextBlock Text="Title" Classes="field-label" />
+                    <TextBox Text="{Binding Title, Mode=TwoWay}" PlaceholderText="Note title" />
+
+                    <TextBlock Text="Summary" Classes="field-label" />
+                    <TextBox Text="{Binding Summary, Mode=TwoWay}"
+                             PlaceholderText="One or two lines: the key idea you want to remember"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             MinHeight="52" />
+
+                    <TextBlock Text="Content" Classes="field-label" />
+                    <TextBox Text="{Binding Content, Mode=TwoWay}"
+                             PlaceholderText="Write your note here..."
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             MinHeight="160" />
+
+                    <Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="12">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Attached task" Classes="field-label" />
+                            <ComboBox ItemsSource="{Binding Tasks}"
+                                      SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:TaskItem">
+                                        <TextBlock Text="{Binding Title}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <TextBlock Text="Category" Classes="field-label" />
+                            <ComboBox ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Category">
+                                        <TextBlock Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Spacing="6">
+                            <TextBlock Text="Study goal" Classes="field-label" />
+                            <ComboBox ItemsSource="{Binding LearningActivities}"
+                                      SelectedItem="{Binding SelectedLearningActivity, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:LearningActivity">
+                                        <TextBlock Text="{Binding Title}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3" Spacing="6" VerticalAlignment="Bottom">
+                            <CheckBox Content="Pin" IsChecked="{Binding IsPinned, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Save note" Command="{Binding SaveNoteCommand}" Classes="primary" />
+                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Saved notes" Classes="section-title" />
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding SearchText, Mode=TwoWay}"
+                                 PlaceholderText="Search title, summary or content..." />
+                        <Button Grid.Column="1"
+                                Content="Clear filter"
+                                Command="{Binding ClearTaskFilterCommand}"
+                                Classes="secondary"
+                                IsVisible="{Binding TaskFilter, Converter={x:Static converters:ObjectConverters.IsNotNull}}" />
+                    </Grid>
+
+                    <Border Classes="filter-banner"
+                            IsVisible="{Binding TaskFilter, Converter={x:Static converters:ObjectConverters.IsNotNull}}">
+                        <TextBlock>
+                            <Run Text="Showing notes for task: " />
+                            <Run Text="{Binding TaskFilter.Title}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </Border>
+
+                    <ListBox ItemsSource="{Binding Notes}"
+                             SelectedItem="{Binding SelectedNote, Mode=TwoWay}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             MaxHeight="280">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:Note">
+                                <StackPanel Spacing="4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock Text="Pinned" Classes="badge-pin" IsVisible="{Binding IsPinned}" />
+                                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding Summary}" Classes="summary" MaxLines="2" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding Content}" Classes="muted" MaxLines="2" TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{Binding Task.Title}" Classes="muted" />
+                                        <TextBlock Text="{Binding Category.Name}" Classes="muted" />
+                                        <TextBlock Text="{Binding LearningActivity.Title}" Classes="muted" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Pin / Unpin" Command="{Binding TogglePinCommand}" Classes="secondary" />
+                        <Button Content="Delete" Command="{Binding DeleteNoteCommand}" Classes="danger" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

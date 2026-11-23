@@ -1,0 +1,95 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels.Learning"
+             xmlns:models="using:TaskManager.Core.Models"
+             x:Class="TaskManager.UI.Views.Learning.LearningView"
+             x:DataType="vm:LearningViewModel"
+             x:CompileBindings="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Study goals" Classes="page-title" />
+                <TextBlock Text="Track subjects and skills, and see the tasks and notes behind them." Classes="muted" />
+            </StackPanel>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Learning activity" Classes="section-title" />
+
+                    <TextBlock Text="Subject or skill" Classes="field-label" />
+                    <TextBox Text="{Binding Title, Mode=TwoWay}" PlaceholderText="For example: C#, Japanese, Docker" />
+
+                    <TextBlock Text="Description" Classes="field-label" />
+                    <TextBox Text="{Binding Description, Mode=TwoWay}"
+                             PlaceholderText="What do you want to learn?"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             MinHeight="70" />
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
+                        <StackPanel Grid.Column="0" Spacing="6">
+                            <TextBlock Text="Status" Classes="field-label" />
+                            <ComboBox ItemsSource="{Binding Statuses}"
+                                      SelectedItem="{Binding Status, Mode=TwoWay}"
+                                      HorizontalAlignment="Stretch" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="6">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="Progress" Classes="field-label" />
+                                <TextBlock Text="{Binding ProgressInput}" Classes="muted" />
+                                <TextBlock Text="%" Classes="muted" />
+                            </StackPanel>
+                            <Slider Minimum="0" Maximum="100"
+                                    Value="{Binding ProgressInput, Mode=TwoWay}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Save activity" Command="{Binding SaveActivityCommand}" Classes="primary" />
+                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Your activities" Classes="section-title" />
+
+                    <ListBox ItemsSource="{Binding Activities}"
+                             SelectedItem="{Binding SelectedActivity, Mode=TwoWay}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             MaxHeight="320">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:LearningActivity">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding Description}" Classes="muted" MaxLines="2" />
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{Binding Status}" Classes="muted" />
+                                        <TextBlock Text="{Binding Progress}" Classes="muted" />
+                                        <TextBlock Text="%" Classes="muted" />
+                                        <TextBlock Text="{Binding CompletedTasks}" Classes="muted" />
+                                        <TextBlock Text="/" Classes="muted" />
+                                        <TextBlock Text="{Binding Tasks.Count}" Classes="muted" />
+                                        <TextBlock Text="tasks done" Classes="muted" />
+                                        <TextBlock Text="{Binding Notes.Count}" Classes="muted" />
+                                        <TextBlock Text="study notes" Classes="muted" />
+                                    </StackPanel>
+                                    <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Button Content="Delete" Command="{Binding DeleteActivityCommand}" Classes="danger" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

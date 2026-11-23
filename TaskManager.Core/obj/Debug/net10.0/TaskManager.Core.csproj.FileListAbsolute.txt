@@ -1,0 +1,11 @@
+/home/wael/projects1/taskmanager/TaskManager.Core/bin/Debug/net10.0/TaskManager.Core.deps.json
+/home/wael/projects1/taskmanager/TaskManager.Core/bin/Debug/net10.0/TaskManager.Core.dll
+/home/wael/projects1/taskmanager/TaskManager.Core/bin/Debug/net10.0/TaskManager.Core.pdb
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.AssemblyInfoInputs.cache
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.AssemblyInfo.cs
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.csproj.CoreCompileInputs.cache
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.dll
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/refint/TaskManager.Core.dll
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/TaskManager.Core.pdb
+/home/wael/projects1/taskmanager/TaskManager.Core/obj/Debug/net10.0/ref/TaskManager.Core.dll

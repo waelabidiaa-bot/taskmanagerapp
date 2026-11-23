@@ -1,0 +1,151 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dashboardVm="using:TaskManager.UI.ViewModels.Dashboard"
+             xmlns:tasksVm="using:TaskManager.UI.ViewModels.Tasks"
+             xmlns:notesVm="using:TaskManager.UI.ViewModels.Notes"
+             xmlns:learningVm="using:TaskManager.UI.ViewModels.Learning"
+             xmlns:categoriesVm="using:TaskManager.UI.ViewModels.Categories"
+             xmlns:settingsVm="using:TaskManager.UI.ViewModels.Settings"
+             xmlns:dashboard="using:TaskManager.UI.Views.Dashboard"
+             xmlns:tasks="using:TaskManager.UI.Views.Tasks"
+             xmlns:notes="using:TaskManager.UI.Views.Notes"
+             xmlns:learning="using:TaskManager.UI.Views.Learning"
+             xmlns:categories="using:TaskManager.UI.Views.Categories"
+             xmlns:settings="using:TaskManager.UI.Views.Settings"
+             x:Class="TaskManager.UI.App"
+             RequestedThemeVariant="Light">
+
+    <Application.Styles>
+        <FluentTheme />
+
+        <!-- Typography -->
+        <Style Selector="TextBlock.page-title">
+            <Setter Property="FontSize" Value="26" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#0F172A" />
+        </Style>
+        <Style Selector="TextBlock.section-title">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#0F172A" />
+        </Style>
+        <Style Selector="TextBlock.field-label">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#475569" />
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#64748B" />
+        </Style>
+        <Style Selector="TextBlock.summary">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#334155" />
+        </Style>
+        <Style Selector="TextBlock.badge-pin">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#1D4ED8" />
+        </Style>
+        <Style Selector="TextBlock.error">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#DC2626" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <!-- Surfaces -->
+        <Style Selector="Border.panel">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="BorderBrush" Value="#E2E8F0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="18" />
+        </Style>
+        <Style Selector="Border.filter-banner">
+            <Setter Property="Background" Value="#EFF6FF" />
+            <Setter Property="BorderBrush" Value="#BFDBFE" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="10,8" />
+        </Style>
+
+        <!-- Inputs and buttons -->
+        <Style Selector="TextBox">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderBrush" Value="#CBD5E1" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="Padding" Value="9,7" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="BorderBrush" Value="#CBD5E1" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="DatePicker">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#2563EB" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.danger">
+            <Setter Property="Background" Value="#FEE2E2" />
+            <Setter Property="Foreground" Value="#B91C1C" />
+            <Setter Property="Padding" Value="16,8" />
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#F1F5F9" />
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="Padding" Value="16,8" />
+        </Style>
+        <Style Selector="Button.nav">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#334155" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Button.nav:pointerover">
+            <Setter Property="Background" Value="#F1F5F9" />
+        </Style>
+        <Style Selector="Button.nav.selected">
+            <Setter Property="Background" Value="#E0E7FF" />
+            <Setter Property="Foreground" Value="#1D4ED8" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.nav.selected:pointerover">
+            <Setter Property="Background" Value="#DBEAFE" />
+        </Style>
+    </Application.Styles>
+
+    <Application.DataTemplates>
+        <DataTemplate DataType="{x:Type dashboardVm:DashboardViewModel}">
+            <dashboard:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type tasksVm:TasksViewModel}">
+            <tasks:TasksView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type notesVm:NotesViewModel}">
+            <notes:NotesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type learningVm:LearningViewModel}">
+            <learning:LearningView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type categoriesVm:CategoriesViewModel}">
+            <categories:CategoriesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type settingsVm:SettingsViewModel}">
+            <settings:SettingsView />
+        </DataTemplate>
+    </Application.DataTemplates>
+</Application>

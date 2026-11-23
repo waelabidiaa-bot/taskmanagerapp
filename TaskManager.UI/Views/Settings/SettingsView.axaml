@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels.Settings"
+             x:Class="TaskManager.UI.Views.Settings.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             x:CompileBindings="True">
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+
+            <StackPanel Spacing="4">
+                <TextBlock Text="Settings" Classes="page-title" />
+                <TextBlock Text="Basic information about your workspace." Classes="muted" />
+            </StackPanel>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Application" Classes="section-title" />
+                    <TextBlock Text="Personal Productivity &amp; Learning Manager" />
+                    <TextBlock Text="Database file" Classes="field-label" />
+                    <TextBlock Text="{Binding DatabaseFile}" />
+                </StackPanel>
+            </Border>
+
+            <Border Classes="panel">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Stored data" Classes="section-title" />
+                    <TextBlock Text="{Binding TaskCount}" />
+                    <TextBlock Text="tasks" Classes="muted" />
+                    <TextBlock Text="{Binding NoteCount}" />
+                    <TextBlock Text="notes" Classes="muted" />
+                    <TextBlock Text="{Binding LearningCount}" />
+                    <TextBlock Text="learning activities" Classes="muted" />
+                    <TextBlock Text="{Binding CategoryCount}" />
+                    <TextBlock Text="categories" Classes="muted" />
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}" Classes="secondary" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
