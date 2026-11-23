@@ -64,6 +64,29 @@ namespace TaskManager.Data.Database.Migrations
                     b.ToTable("LearningActivities");
                 });
 
+            modelBuilder.Entity("TaskManager.Core.Models.LearningMilestone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("LearningActivityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningActivityId");
+
+                    b.ToTable("LearningMilestones");
+                });
+
             modelBuilder.Entity("TaskManager.Core.Models.Note", b =>
                 {
                     b.Property<int>("Id")
@@ -152,6 +175,17 @@ namespace TaskManager.Data.Database.Migrations
                     b.ToTable("Tasks");
                 });
 
+            modelBuilder.Entity("TaskManager.Core.Models.LearningMilestone", b =>
+                {
+                    b.HasOne("TaskManager.Core.Models.LearningActivity", "LearningActivity")
+                        .WithMany("Milestones")
+                        .HasForeignKey("LearningActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningActivity");
+                });
+
             modelBuilder.Entity("TaskManager.Core.Models.Note", b =>
                 {
                     b.HasOne("TaskManager.Core.Models.Category", "Category")
@@ -202,6 +236,8 @@ namespace TaskManager.Data.Database.Migrations
 
             modelBuilder.Entity("TaskManager.Core.Models.LearningActivity", b =>
                 {
+                    b.Navigation("Milestones");
+
                     b.Navigation("Notes");
 
                     b.Navigation("Tasks");

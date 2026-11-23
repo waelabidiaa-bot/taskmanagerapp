@@ -8,8 +8,10 @@ using TaskManager.Core.Interfaces;
 using TaskManager.Core.Services;
 using TaskManager.Data.Database;
 using TaskManager.Data.Repositories;
+using TaskManager.UI.Icons;
 using TaskManager.UI.Services;
 using TaskManager.UI.ViewModels;
+using TaskManager.UI.ViewModels.AllTasks;
 using TaskManager.UI.ViewModels.Categories;
 using TaskManager.UI.ViewModels.Dashboard;
 using TaskManager.UI.ViewModels.Learning;
@@ -42,15 +44,29 @@ public partial class App : Application
         var context = _appScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         DatabaseConfiguration.InitializeAsync(context).GetAwaiter().GetResult();
 
+        // Register the modules once; navigation opens them as panes in one window.
+        var navigation = _appScope.ServiceProvider.GetRequiredService<NavigationService>();
+        RegisterModules(navigation);
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = _appScope.ServiceProvider.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = _appScope.ServiceProvider
-                .GetRequiredService<MainWindowViewModel>();
-            desktop.MainWindow = mainWindow;
+            navigation.NavigateAsync("Dashboard").GetAwaiter().GetResult();
+            desktop.MainWindow = navigation.ShellWindow;
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void RegisterModules(NavigationService navigation)
+    {
+        var provider = Services;
+        navigation.Register("Dashboard", provider.GetRequiredService<DashboardViewModel>(), AppIcons.Dashboard);
+        navigation.Register("All Tasks", provider.GetRequiredService<AllTasksViewModel>(), AppIcons.AllTasks);
+        navigation.Register("Tasks", provider.GetRequiredService<TasksViewModel>(), AppIcons.Tasks);
+        navigation.Register("Notes", provider.GetRequiredService<NotesViewModel>(), AppIcons.Notes);
+        navigation.Register("Learning", provider.GetRequiredService<LearningViewModel>(), AppIcons.Learning);
+        navigation.Register("Categories", provider.GetRequiredService<CategoriesViewModel>(), AppIcons.Categories);
+        navigation.Register("Settings", provider.GetRequiredService<SettingsViewModel>(), AppIcons.Settings);
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -75,14 +91,16 @@ public partial class App : Application
         services.AddSingleton<INavigationService>(provider =>
             provider.GetRequiredService<NavigationService>());
 
-        // ViewModels and the shell
+        // A module has one pane, so its ViewModel is shared. The shell ViewModel
+        // is transient so a fresh window gets a fresh rail and pane collection.
         services.AddTransient<MainWindow>();
         services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<DashboardViewModel>();
-        services.AddTransient<TasksViewModel>();
-        services.AddTransient<NotesViewModel>();
-        services.AddTransient<LearningViewModel>();
-        services.AddTransient<CategoriesViewModel>();
-        services.AddTransient<SettingsViewModel>();
+        services.AddSingleton<DashboardViewModel>();
+        services.AddSingleton<AllTasksViewModel>();
+        services.AddSingleton<TasksViewModel>();
+        services.AddSingleton<NotesViewModel>();
+        services.AddSingleton<LearningViewModel>();
+        services.AddSingleton<CategoriesViewModel>();
+        services.AddSingleton<SettingsViewModel>();
     }
 }

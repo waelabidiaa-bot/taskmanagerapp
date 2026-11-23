@@ -9,7 +9,7 @@ build_property.AvaloniaNameGeneratorAttachDevTools = true
 build_property.AvaloniaUseCompiledBindingsByDefault = true
 build_property.AvaloniaMainPackageVersion = 12.1.6
 build_property.AvaloniaPreviewerNetCoreToolPath = /home/wael/.nuget/packages/avalonia/12.1.6/buildTransitive//../tools/net8.0/designer/Avalonia.Designer.HostApp.dll
-build_property.AvaloniaResourcePaths = /home/wael/projects1/taskmanager/TaskManager.UI/App.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/MainWindow.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Categories/CategoriesView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Dashboard/DashboardView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Learning/LearningView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Notes/NotesView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Settings/SettingsView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Tasks/TasksView.axaml
+build_property.AvaloniaResourcePaths = /home/wael/projects1/taskmanager/TaskManager.UI/App.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/MainWindow.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/AllTasks/AllTasksView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Categories/CategoriesView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Dashboard/DashboardView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Learning/LearningView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Notes/NotesView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Settings/SettingsView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Shell/PaneView.axaml,/home/wael/projects1/taskmanager/TaskManager.UI/Views/Tasks/TasksView.axaml
 build_property.TargetFramework = net10.0
 build_property.TargetFramework = net10.0
 build_property.TargetPlatformMinVersion = 
@@ -47,6 +47,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [/home/wael/projects1/taskmanager/TaskManager.UI/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[/home/wael/projects1/taskmanager/TaskManager.UI/Views/AllTasks/AllTasksView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/home/wael/projects1/taskmanager/TaskManager.UI/Views/Categories/CategoriesView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
@@ -60,6 +63,9 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/wael/projects1/taskmanager/TaskManager.UI/Views/Settings/SettingsView.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/wael/projects1/taskmanager/TaskManager.UI/Views/Shell/PaneView.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/wael/projects1/taskmanager/TaskManager.UI/Views/Tasks/TasksView.axaml]

@@ -9,4 +9,5 @@ public interface ILearningRepository
     Task AddAsync(LearningActivity activity);
     Task UpdateAsync(LearningActivity activity);
     Task DeleteAsync(int id);
+    Task DeleteMilestoneAsync(int milestoneId);
 }

@@ -3,24 +3,31 @@
              xmlns:vm="using:TaskManager.UI.ViewModels.Tasks"
              xmlns:models="using:TaskManager.Core.Models"
              xmlns:converters="using:Avalonia.Data.Converters"
+             xmlns:icons="using:TaskManager.UI.Icons"
              x:Class="TaskManager.UI.Views.Tasks.TasksView"
              x:DataType="vm:TasksViewModel"
              x:CompileBindings="True">
 
-    <ScrollViewer>
-        <StackPanel Spacing="14">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14" MaxWidth="1200" HorizontalAlignment="Center">
 
-            <StackPanel Spacing="4">
-                <TextBlock Text="Tasks" Classes="page-title" />
-                <TextBlock Text="Create, organize and complete your daily tasks." Classes="muted" />
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <PathIcon Data="{x:Static icons:AppIcons.Tasks}" Classes="page-icon" Foreground="#60A5FA" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Tasks" Classes="page-title" />
+                    <TextBlock Text="Create, organize and complete your daily tasks." Classes="muted" />
+                </StackPanel>
             </StackPanel>
 
             <Border Classes="panel">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Task details" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Edit}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Task details" Classes="section-title" />
+                    </StackPanel>
 
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16" RowSpacing="10">
-                        <StackPanel Grid.Column="0" Spacing="6">
+                    <WrapPanel ItemSpacing="16" LineSpacing="12">
+                        <StackPanel MinWidth="260" Spacing="6">
                             <TextBlock Text="Title" Classes="field-label" />
                             <TextBox Text="{Binding Title, Mode=TwoWay}" PlaceholderText="What needs to be done?" />
                             <TextBlock Text="Description" Classes="field-label" Margin="0,6,0,0" />
@@ -31,7 +38,7 @@
                                      MinHeight="70" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Spacing="6">
+                        <StackPanel MinWidth="260" Spacing="6">
                             <TextBlock Text="Priority" Classes="field-label" />
                             <ComboBox ItemsSource="{Binding Priorities}"
                                       SelectedItem="{Binding Priority, Mode=TwoWay}"
@@ -62,33 +69,46 @@
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </StackPanel>
-                    </Grid>
+                    </WrapPanel>
 
                     <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="Save task" Command="{Binding SaveTaskCommand}" Classes="primary" />
-                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
-                    </StackPanel>
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding SaveTaskCommand}" Classes="primary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Save}" Classes="icon" />
+                                <TextBlock Text="Save task" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ClearFormCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Clear}" Classes="icon" />
+                                <TextBlock Text="Clear" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
 
             <Border Classes="panel">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Task list" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.AllTasks}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Task list" Classes="section-title" />
+                    </StackPanel>
 
-                    <Grid ColumnDefinitions="2*,*,*" ColumnSpacing="10">
-                        <TextBox Grid.Column="0"
+                    <WrapPanel ItemSpacing="10" LineSpacing="10">
+                        <TextBox MinWidth="220"
                                  Text="{Binding SearchText, Mode=TwoWay}"
                                  PlaceholderText="Search tasks..." />
-                        <ComboBox Grid.Column="1"
+                        <ComboBox MinWidth="130"
                                   ItemsSource="{Binding StatusFilters}"
                                   SelectedItem="{Binding StatusFilter, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch" />
-                        <ComboBox Grid.Column="2"
+                        <ComboBox MinWidth="130"
                                   ItemsSource="{Binding PriorityFilters}"
                                   SelectedItem="{Binding PriorityFilter, Mode=TwoWay}"
                                   HorizontalAlignment="Stretch" />
-                    </Grid>
+                    </WrapPanel>
 
                     <ListBox ItemsSource="{Binding Tasks}"
                              SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
@@ -100,26 +120,41 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
                                     <TextBlock Text="{Binding Description}" Classes="muted" MaxLines="2" />
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <WrapPanel ItemSpacing="12" LineSpacing="4">
                                         <TextBlock Text="Completed" Classes="muted" IsVisible="{Binding IsFinished}" />
                                         <TextBlock Text="Pending" Classes="muted" IsVisible="{Binding !IsFinished}" />
                                         <TextBlock Text="{Binding Priority}" Classes="muted" />
                                         <TextBlock Text="{Binding DueDate}" Classes="muted" />
                                         <TextBlock Text="{Binding Category.Name}" Classes="muted" />
                                         <TextBlock Text="{Binding LearningActivity.Title}" Classes="muted" />
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="Toggle complete" Command="{Binding ToggleCompleteCommand}" Classes="secondary" />
-                        <Button Content="Open task notes" Command="{Binding OpenTaskNotesCommand}" Classes="secondary" />
-                        <Button Content="Delete" Command="{Binding DeleteTaskCommand}" Classes="danger" />
-                    </StackPanel>
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding ToggleCompleteCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Check}" Classes="icon" />
+                                <TextBlock Text="Toggle complete" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding OpenTaskNotesCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Notes}" Classes="icon" />
+                                <TextBlock Text="Open task notes" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding DeleteTaskCommand}" Classes="danger">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Delete}" Classes="icon" />
+                                <TextBlock Text="Delete" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
 
-                    <Border Background="#F8FAFC" CornerRadius="4" Padding="10"
+                    <Border Background="#1E293B" CornerRadius="4" Padding="10"
                             IsVisible="{Binding SelectedTask, Converter={x:Static converters:ObjectConverters.IsNotNull}}">
                         <StackPanel Spacing="6">
                             <TextBlock Text="Notes for selected task" Classes="section-title" />

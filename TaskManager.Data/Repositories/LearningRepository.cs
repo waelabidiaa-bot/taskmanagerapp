@@ -20,6 +20,7 @@ public class LearningRepository : ILearningRepository
             .AsNoTracking()
             .Include(l => l.Tasks)
             .Include(l => l.Notes)
+            .Include(l => l.Milestones)
             .OrderByDescending(l => l.CreatedAt)
             .ToListAsync();
     }
@@ -28,6 +29,7 @@ public class LearningRepository : ILearningRepository
     {
         return await _context.LearningActivities
             .AsNoTracking()
+            .Include(l => l.Milestones)
             .FirstOrDefaultAsync(l => l.Id == id);
     }
 
@@ -38,6 +40,8 @@ public class LearningRepository : ILearningRepository
         _context.ChangeTracker.Clear();
     }
 
+    // Also saves changes to the loaded Milestones collection, so the service can
+    // add, toggle or remove milestones and update progress in one place.
     public async Task UpdateAsync(LearningActivity activity)
     {
         _context.LearningActivities.Update(activity);
@@ -52,6 +56,17 @@ public class LearningRepository : ILearningRepository
             return;
 
         _context.LearningActivities.Remove(activity);
+        await _context.SaveChangesAsync();
+        _context.ChangeTracker.Clear();
+    }
+
+    public async Task DeleteMilestoneAsync(int milestoneId)
+    {
+        var milestone = await _context.LearningMilestones.FindAsync(milestoneId);
+        if (milestone is null)
+            return;
+
+        _context.LearningMilestones.Remove(milestone);
         await _context.SaveChangesAsync();
         _context.ChangeTracker.Clear();
     }

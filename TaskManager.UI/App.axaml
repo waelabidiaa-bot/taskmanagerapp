@@ -1,136 +1,195 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:dashboardVm="using:TaskManager.UI.ViewModels.Dashboard"
+              xmlns:allTasksVm="using:TaskManager.UI.ViewModels.AllTasks"
              xmlns:tasksVm="using:TaskManager.UI.ViewModels.Tasks"
              xmlns:notesVm="using:TaskManager.UI.ViewModels.Notes"
              xmlns:learningVm="using:TaskManager.UI.ViewModels.Learning"
              xmlns:categoriesVm="using:TaskManager.UI.ViewModels.Categories"
              xmlns:settingsVm="using:TaskManager.UI.ViewModels.Settings"
              xmlns:dashboard="using:TaskManager.UI.Views.Dashboard"
+              xmlns:allTasks="using:TaskManager.UI.Views.AllTasks"
              xmlns:tasks="using:TaskManager.UI.Views.Tasks"
              xmlns:notes="using:TaskManager.UI.Views.Notes"
              xmlns:learning="using:TaskManager.UI.Views.Learning"
              xmlns:categories="using:TaskManager.UI.Views.Categories"
              xmlns:settings="using:TaskManager.UI.Views.Settings"
              x:Class="TaskManager.UI.App"
-             RequestedThemeVariant="Light">
+             RequestedThemeVariant="Dark">
 
     <Application.Styles>
         <FluentTheme />
 
         <!-- Typography -->
         <Style Selector="TextBlock.page-title">
-            <Setter Property="FontSize" Value="26" />
+            <Setter Property="FontSize" Value="28" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="Foreground" Value="#F1F5F9" />
         </Style>
         <Style Selector="TextBlock.section-title">
-            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="Foreground" Value="#F1F5F9" />
         </Style>
         <Style Selector="TextBlock.field-label">
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#475569" />
+            <Setter Property="Foreground" Value="#CBD5E1" />
         </Style>
         <Style Selector="TextBlock.muted">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#64748B" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#94A3B8" />
         </Style>
         <Style Selector="TextBlock.summary">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#334155" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
         </Style>
         <Style Selector="TextBlock.badge-pin">
-            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="SemiBold" />
-            <Setter Property="Foreground" Value="#1D4ED8" />
+            <Setter Property="Foreground" Value="#93C5FD" />
         </Style>
         <Style Selector="TextBlock.error">
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#DC2626" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#FCA5A5" />
             <Setter Property="TextWrapping" Value="Wrap" />
         </Style>
 
-        <!-- Surfaces -->
+        <!-- Icons inherit the foreground of their parent button or panel. -->
+        <Style Selector="PathIcon.icon">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="PathIcon.page-icon">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="PathIcon.rail-icon">
+            <Setter Property="Width" Value="22" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="ProgressBar">
+            <Setter Property="Foreground" Value="#60A5FA" />
+        </Style>
+
+        <!-- Surfaces: rounded, roomy cards on a dark canvas. -->
         <Style Selector="Border.panel">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="#E2E8F0" />
+            <Setter Property="Background" Value="#1E293B" />
+            <Setter Property="BorderBrush" Value="#334155" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding" Value="18" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="22" />
         </Style>
         <Style Selector="Border.filter-banner">
-            <Setter Property="Background" Value="#EFF6FF" />
-            <Setter Property="BorderBrush" Value="#BFDBFE" />
+            <Setter Property="Background" Value="#172554" />
+            <Setter Property="BorderBrush" Value="#1E40AF" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="12,10" />
+        </Style>
+        <Style Selector="Border.metric">
+            <Setter Property="Background" Value="#1E293B" />
+            <Setter Property="BorderBrush" Value="#334155" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="16,12" />
         </Style>
 
         <!-- Inputs and buttons -->
         <Style Selector="TextBox">
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="BorderBrush" Value="#CBD5E1" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="Padding" Value="9,7" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderBrush" Value="#475569" />
+            <Setter Property="Background" Value="#0F172A" />
+            <Setter Property="Padding" Value="12,9" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
         <Style Selector="ComboBox">
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="BorderBrush" Value="#CBD5E1" />
-            <Setter Property="Background" Value="White" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderBrush" Value="#475569" />
+            <Setter Property="Background" Value="#0F172A" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
         <Style Selector="DatePicker">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Background" Value="#0F172A" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
         <Style Selector="Button">
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="FontSize" Value="14" />
         </Style>
         <Style Selector="Button.primary">
-            <Setter Property="Background" Value="#2563EB" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Background" Value="#60A5FA" />
+            <Setter Property="Foreground" Value="#0F172A" />
+            <Setter Property="Padding" Value="18,10" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
         <Style Selector="Button.danger">
-            <Setter Property="Background" Value="#FEE2E2" />
-            <Setter Property="Foreground" Value="#B91C1C" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Background" Value="#4C1D1D" />
+            <Setter Property="Foreground" Value="#FCA5A5" />
+            <Setter Property="Padding" Value="18,10" />
         </Style>
         <Style Selector="Button.secondary">
-            <Setter Property="Background" Value="#F1F5F9" />
-            <Setter Property="Foreground" Value="#0F172A" />
-            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Background" Value="#334155" />
+            <Setter Property="Foreground" Value="#F1F5F9" />
+            <Setter Property="Padding" Value="18,10" />
         </Style>
-        <Style Selector="Button.nav">
+        <!-- Slim activity-bar buttons. A left accent marks the active module. -->
+        <Style Selector="Button.rail">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="44" />
+            <Setter Property="Margin" Value="6,2" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#334155" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Padding" Value="14,10" />
-            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#94A3B8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-        <Style Selector="Button.nav:pointerover">
-            <Setter Property="Background" Value="#F1F5F9" />
+        <Style Selector="Button.rail:pointerover">
+            <Setter Property="Background" Value="#1E293B" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
         </Style>
-        <Style Selector="Button.nav.selected">
-            <Setter Property="Background" Value="#E0E7FF" />
-            <Setter Property="Foreground" Value="#1D4ED8" />
-            <Setter Property="FontWeight" Value="SemiBold" />
+        <Style Selector="Button.rail.selected">
+            <Setter Property="Background" Value="#1E3A8A" />
+            <Setter Property="Foreground" Value="#93C5FD" />
+            <Setter Property="BorderBrush" Value="#60A5FA" />
+            <Setter Property="BorderThickness" Value="3,0,0,0" />
         </Style>
-        <Style Selector="Button.nav.selected:pointerover">
-            <Setter Property="Background" Value="#DBEAFE" />
+        <Style Selector="Button.rail.selected:pointerover">
+            <Setter Property="Background" Value="#1E40AF" />
         </Style>
+
+        <!-- Small close button in a split-panel header. -->
+        <Style Selector="Button.pane-close">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#94A3B8" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.pane-close:pointerover">
+            <Setter Property="Background" Value="#334155" />
+            <Setter Property="Foreground" Value="#FCA5A5" />
+        </Style>
+
     </Application.Styles>
 
     <Application.DataTemplates>
         <DataTemplate DataType="{x:Type dashboardVm:DashboardViewModel}">
             <dashboard:DashboardView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type allTasksVm:AllTasksViewModel}">
+            <allTasks:AllTasksView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type tasksVm:TasksViewModel}">
             <tasks:TasksView />

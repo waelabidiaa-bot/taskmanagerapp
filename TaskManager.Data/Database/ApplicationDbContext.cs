@@ -13,6 +13,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<TaskItem> Tasks => Set<TaskItem>();
     public DbSet<Note> Notes => Set<Note>();
     public DbSet<LearningActivity> LearningActivities => Set<LearningActivity>();
+    public DbSet<LearningMilestone> LearningMilestones => Set<LearningMilestone>();
     public DbSet<Category> Categories => Set<Category>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +28,8 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<TaskItem>(entity =>
         {
+            entity.Ignore(t => t.ProgressPercent);
+
             entity.HasOne(t => t.Category)
                 .WithMany(c => c.Tasks)
                 .HasForeignKey(t => t.CategoryId)
@@ -38,8 +41,16 @@ public class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
-        modelBuilder.Entity<LearningActivity>()
-            .Ignore(l => l.CompletedTasks);
+        modelBuilder.Entity<LearningActivity>(entity =>
+        {
+            entity.Ignore(l => l.CompletedTasks);
+            entity.Ignore(l => l.CompletedMilestones);
+
+            entity.HasMany(l => l.Milestones)
+                .WithOne(m => m.LearningActivity)
+                .HasForeignKey(m => m.LearningActivityId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         modelBuilder.Entity<Note>(entity =>
         {

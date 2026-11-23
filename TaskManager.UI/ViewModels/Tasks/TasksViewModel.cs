@@ -53,6 +53,8 @@ public partial class TasksViewModel : ObservableObject, INavigationAware
 
     public async Task OnNavigatedToAsync(object? parameter = null)
     {
+        var previousId = SelectedTask?.Id;
+
         _allTasks = await _taskService.GetAllAsync();
         ApplyFilters();
 
@@ -63,6 +65,12 @@ public partial class TasksViewModel : ObservableObject, INavigationAware
         LearningActivities.Clear();
         foreach (var activity in await _learningService.GetAllAsync())
             LearningActivities.Add(activity);
+
+        // All Tasks can open this page with a task to edit.
+        if (parameter is TaskItem incoming)
+            SelectedTask = Tasks.FirstOrDefault(t => t.Id == incoming.Id) ?? incoming;
+        else if (previousId is not null)
+            SelectedTask = Tasks.FirstOrDefault(t => t.Id == previousId);
     }
 
     partial void OnSelectedTaskChanged(TaskItem? value)

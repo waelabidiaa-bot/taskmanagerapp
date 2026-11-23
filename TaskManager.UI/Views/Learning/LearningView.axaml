@@ -2,16 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:TaskManager.UI.ViewModels.Learning"
              xmlns:models="using:TaskManager.Core.Models"
+             xmlns:converters="using:Avalonia.Data.Converters"
+             xmlns:icons="using:TaskManager.UI.Icons"
              x:Class="TaskManager.UI.Views.Learning.LearningView"
              x:DataType="vm:LearningViewModel"
              x:CompileBindings="True">
 
-    <ScrollViewer>
-        <StackPanel Spacing="14">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14" MaxWidth="1200" HorizontalAlignment="Center">
 
-            <StackPanel Spacing="4">
-                <TextBlock Text="Study goals" Classes="page-title" />
-                <TextBlock Text="Track subjects and skills, and see the tasks and notes behind them." Classes="muted" />
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <PathIcon Data="{x:Static icons:AppIcons.Learning}" Classes="page-icon" Foreground="#60A5FA" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Study goals" Classes="page-title" />
+                    <TextBlock Text="Define milestones; progress is calculated from the ones you complete." Classes="muted" />
+                </StackPanel>
             </StackPanel>
 
             <Border Classes="panel">
@@ -28,36 +33,117 @@
                              TextWrapping="Wrap"
                              MinHeight="70" />
 
-                    <Grid ColumnDefinitions="*,*" ColumnSpacing="16">
-                        <StackPanel Grid.Column="0" Spacing="6">
-                            <TextBlock Text="Status" Classes="field-label" />
-                            <ComboBox ItemsSource="{Binding Statuses}"
-                                      SelectedItem="{Binding Status, Mode=TwoWay}"
-                                      HorizontalAlignment="Stretch" />
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Spacing="6">
-                            <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="Progress" Classes="field-label" />
-                                <TextBlock Text="{Binding ProgressInput}" Classes="muted" />
-                                <TextBlock Text="%" Classes="muted" />
-                            </StackPanel>
-                            <Slider Minimum="0" Maximum="100"
-                                    Value="{Binding ProgressInput, Mode=TwoWay}" />
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Status" Classes="field-label" />
+                        <ComboBox ItemsSource="{Binding Statuses}"
+                                  SelectedItem="{Binding Status, Mode=TwoWay}"
+                                  HorizontalAlignment="Stretch"
+                                  MaxWidth="220" />
+                    </StackPanel>
 
                     <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="Save activity" Command="{Binding SaveActivityCommand}" Classes="primary" />
-                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
-                    </StackPanel>
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding SaveActivityCommand}" Classes="primary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Save}" Classes="icon" />
+                                <TextBlock Text="Save activity" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ClearFormCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Clear}" Classes="icon" />
+                                <TextBlock Text="Clear" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
 
+            <Border Classes="panel"
+                    IsVisible="{Binding SelectedActivity, Converter={x:Static converters:ObjectConverters.IsNotNull}}">
+                <StackPanel Spacing="12">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Milestone}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Milestones and progress" Classes="section-title" />
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalAlignment="Center">
+                        <ProgressBar Grid.Column="0"
+                                     Value="{Binding SelectedActivity.Progress}"
+                                     Maximum="100"
+                                     Height="10" />
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+                            <TextBlock Text="{Binding SelectedActivity.Progress}" FontWeight="SemiBold" />
+                            <TextBlock Text="%" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Classes="muted">
+                        <Run Text="{Binding SelectedActivity.CompletedMilestones}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding SelectedActivity.Milestones.Count}" />
+                        <Run Text="milestones done" />
+                    </TextBlock>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding MilestoneTitle, Mode=TwoWay}"
+                                 PlaceholderText="Next milestone, for example: Finish chapter 4" />
+                        <Button Grid.Column="1"
+                                Command="{Binding AddMilestoneCommand}"
+                                Classes="primary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Add}" Classes="icon" />
+                                <TextBlock Text="Add milestone" />
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <ListBox ItemsSource="{Binding SelectedActivity.Milestones}"
+                             SelectedItem="{Binding SelectedMilestone, Mode=TwoWay}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             MaxHeight="180">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:LearningMilestone">
+                                <CheckBox Content="{Binding Title}"
+                                          IsChecked="{Binding IsCompleted}"
+                                          IsEnabled="False" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding ToggleMilestoneCommand}"
+                                Classes="secondary"
+                                IsEnabled="{Binding SelectedMilestone, Converter={x:Static converters:ObjectConverters.IsNotNull}}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Check}" Classes="icon" />
+                                <TextBlock Text="Mark done / undo" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding DeleteMilestoneCommand}"
+                                Classes="danger"
+                                IsEnabled="{Binding SelectedMilestone, Converter={x:Static converters:ObjectConverters.IsNotNull}}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Delete}" Classes="icon" />
+                                <TextBlock Text="Delete milestone" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="Save a goal, then select it here to add milestones."
+                       Classes="muted"
+                       IsVisible="{Binding SelectedActivity, Converter={x:Static converters:ObjectConverters.IsNull}}" />
+
             <Border Classes="panel">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Your activities" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Learning}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Your activities" Classes="section-title" />
+                    </StackPanel>
 
                     <ListBox ItemsSource="{Binding Activities}"
                              SelectedItem="{Binding SelectedActivity, Mode=TwoWay}"
@@ -69,24 +155,33 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
                                     <TextBlock Text="{Binding Description}" Classes="muted" MaxLines="2" />
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <WrapPanel ItemSpacing="12" LineSpacing="4">
                                         <TextBlock Text="{Binding Status}" Classes="muted" />
-                                        <TextBlock Text="{Binding Progress}" Classes="muted" />
-                                        <TextBlock Text="%" Classes="muted" />
+                                        <TextBlock Text="{Binding CompletedMilestones}" Classes="muted" />
+                                        <TextBlock Text="/" Classes="muted" />
+                                        <TextBlock Text="{Binding Milestones.Count}" Classes="muted" />
+                                        <TextBlock Text="milestones" Classes="muted" />
+                                        <TextBlock Text="·" Classes="muted" />
                                         <TextBlock Text="{Binding CompletedTasks}" Classes="muted" />
                                         <TextBlock Text="/" Classes="muted" />
                                         <TextBlock Text="{Binding Tasks.Count}" Classes="muted" />
-                                        <TextBlock Text="tasks done" Classes="muted" />
+                                        <TextBlock Text="tasks" Classes="muted" />
+                                        <TextBlock Text="·" Classes="muted" />
                                         <TextBlock Text="{Binding Notes.Count}" Classes="muted" />
-                                        <TextBlock Text="study notes" Classes="muted" />
-                                    </StackPanel>
+                                        <TextBlock Text="notes" Classes="muted" />
+                                    </WrapPanel>
                                     <ProgressBar Value="{Binding Progress}" Maximum="100" Height="8" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <Button Content="Delete" Command="{Binding DeleteActivityCommand}" Classes="danger" />
+                    <Button Command="{Binding DeleteActivityCommand}" Classes="danger">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="{x:Static icons:AppIcons.Delete}" Classes="icon" />
+                            <TextBlock Text="Delete" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 

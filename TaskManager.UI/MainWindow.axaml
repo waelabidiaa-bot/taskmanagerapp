@@ -1,48 +1,56 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:TaskManager.UI.ViewModels"
+        xmlns:icons="using:TaskManager.UI.Icons"
         x:Class="TaskManager.UI.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         x:CompileBindings="True"
         Title="My Workspace"
-        Width="1100"
-        Height="720"
-        MinWidth="850"
-        MinHeight="550"
-        Background="#F8FAFC">
+        Width="1300"
+        Height="800"
+        MinWidth="900"
+        MinHeight="600"
+        Background="#0F172A">
 
-    <Grid ColumnDefinitions="210,*">
+    <Grid ColumnDefinitions="56,*">
 
-        <!-- Sidebar -->
+        <!-- VSCode-style activity bar: icons only, tooltips on hover. -->
         <Border Grid.Column="0"
-                Background="White"
-                BorderBrush="#E5E7EB"
+                Background="#0B1120"
+                BorderBrush="#1E293B"
                 BorderThickness="0,0,1,0">
             <DockPanel>
-                <Border DockPanel.Dock="Top" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1"
-                        Padding="18,20,18,16">
-                    <StackPanel Spacing="2">
-                        <TextBlock Text="My Workspace" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A" />
-                        <TextBlock Text="Study, tasks &amp; notes" Classes="muted" />
-                    </StackPanel>
+                <Border DockPanel.Dock="Top"
+                        Height="56"
+                        BorderBrush="#1E293B"
+                        BorderThickness="0,0,0,1">
+                    <PathIcon Data="{x:Static icons:AppIcons.Dashboard}"
+                              Classes="rail-icon"
+                              Foreground="#60A5FA"
+                              ToolTip.Tip="My Workspace" />
                 </Border>
 
-                <ItemsControl ItemsSource="{Binding NavigationItems}" Margin="8,0,8,0">
+                <ItemsControl ItemsSource="{Binding NavigationItems}" Margin="0,8,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="2" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:NavigationItem">
-                            <Button Content="{Binding Title}"
-                                    Command="{Binding SelectCommand}"
-                                    Classes="nav"
-                                    Classes.selected="{Binding IsSelected}" />
+                            <Button Command="{Binding SelectCommand}"
+                                    Classes="rail"
+                                    Classes.selected="{Binding IsSelected}"
+                                    ToolTip.Tip="{Binding Title}">
+                                <PathIcon Data="{Binding Icon}" Classes="rail-icon" />
+                            </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </DockPanel>
         </Border>
 
-        <!-- Selected module -->
-        <ContentControl Grid.Column="1"
-                        Content="{Binding CurrentViewModel}"
-                        Margin="24,20,24,20" />
+        <!-- Panes are added here at runtime, with draggable splitters between them. -->
+        <Grid x:Name="PaneGrid" Grid.Column="1" Margin="8" />
     </Grid>
 </Window>

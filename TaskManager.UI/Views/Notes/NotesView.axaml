@@ -3,21 +3,28 @@
              xmlns:vm="using:TaskManager.UI.ViewModels.Notes"
              xmlns:models="using:TaskManager.Core.Models"
              xmlns:converters="using:Avalonia.Data.Converters"
+             xmlns:icons="using:TaskManager.UI.Icons"
              x:Class="TaskManager.UI.Views.Notes.NotesView"
              x:DataType="vm:NotesViewModel"
              x:CompileBindings="True">
 
-    <ScrollViewer>
-        <StackPanel Spacing="14">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14" MaxWidth="1200" HorizontalAlignment="Center">
 
-            <StackPanel Spacing="4">
-                <TextBlock Text="Notes" Classes="page-title" />
-                <TextBlock Text="Summarize what you study and attach notes to tasks." Classes="muted" />
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <PathIcon Data="{x:Static icons:AppIcons.Notes}" Classes="page-icon" Foreground="#60A5FA" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Notes" Classes="page-title" />
+                    <TextBlock Text="Summarize what you study and attach notes to tasks." Classes="muted" />
+                </StackPanel>
             </StackPanel>
 
             <Border Classes="panel">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Note editor" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Edit}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Note editor" Classes="section-title" />
+                    </StackPanel>
 
                     <TextBlock Text="Title" Classes="field-label" />
                     <TextBox Text="{Binding Title, Mode=TwoWay}" PlaceholderText="Note title" />
@@ -36,8 +43,8 @@
                              TextWrapping="Wrap"
                              MinHeight="160" />
 
-                    <Grid ColumnDefinitions="*,*,*,Auto" ColumnSpacing="12">
-                        <StackPanel Grid.Column="0" Spacing="6">
+                    <WrapPanel ItemSpacing="12" LineSpacing="10">
+                        <StackPanel MinWidth="180" Spacing="6">
                             <TextBlock Text="Attached task" Classes="field-label" />
                             <ComboBox ItemsSource="{Binding Tasks}"
                                       SelectedItem="{Binding SelectedTask, Mode=TwoWay}"
@@ -50,7 +57,7 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Spacing="6">
+                        <StackPanel MinWidth="180" Spacing="6">
                             <TextBlock Text="Category" Classes="field-label" />
                             <ComboBox ItemsSource="{Binding Categories}"
                                       SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
@@ -63,7 +70,7 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2" Spacing="6">
+                        <StackPanel MinWidth="180" Spacing="6">
                             <TextBlock Text="Study goal" Classes="field-label" />
                             <ComboBox ItemsSource="{Binding LearningActivities}"
                                       SelectedItem="{Binding SelectedLearningActivity, Mode=TwoWay}"
@@ -76,22 +83,35 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="3" Spacing="6" VerticalAlignment="Bottom">
+                        <StackPanel MinWidth="80" Spacing="6" VerticalAlignment="Bottom">
                             <CheckBox Content="Pin" IsChecked="{Binding IsPinned, Mode=TwoWay}" />
                         </StackPanel>
-                    </Grid>
+                    </WrapPanel>
 
                     <TextBlock Text="{Binding ErrorMessage}" Classes="error" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="Save note" Command="{Binding SaveNoteCommand}" Classes="primary" />
-                        <Button Content="Clear" Command="{Binding ClearFormCommand}" Classes="secondary" />
-                    </StackPanel>
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding SaveNoteCommand}" Classes="primary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Save}" Classes="icon" />
+                                <TextBlock Text="Save note" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ClearFormCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Clear}" Classes="icon" />
+                                <TextBlock Text="Clear" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
 
             <Border Classes="panel">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Saved notes" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Notes}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Saved notes" Classes="section-title" />
+                    </StackPanel>
 
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
                         <TextBox Grid.Column="0"
@@ -120,26 +140,36 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate x:DataType="models:Note">
                                 <StackPanel Spacing="4">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <WrapPanel ItemSpacing="8" LineSpacing="4">
                                         <TextBlock Text="Pinned" Classes="badge-pin" IsVisible="{Binding IsPinned}" />
                                         <TextBlock Text="{Binding Title}" FontWeight="SemiBold" />
-                                    </StackPanel>
+                                    </WrapPanel>
                                     <TextBlock Text="{Binding Summary}" Classes="summary" MaxLines="2" TextWrapping="Wrap" />
                                     <TextBlock Text="{Binding Content}" Classes="muted" MaxLines="2" TextWrapping="Wrap" />
-                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <WrapPanel ItemSpacing="12" LineSpacing="4">
                                         <TextBlock Text="{Binding Task.Title}" Classes="muted" />
                                         <TextBlock Text="{Binding Category.Name}" Classes="muted" />
                                         <TextBlock Text="{Binding LearningActivity.Title}" Classes="muted" />
-                                    </StackPanel>
+                                    </WrapPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button Content="Pin / Unpin" Command="{Binding TogglePinCommand}" Classes="secondary" />
-                        <Button Content="Delete" Command="{Binding DeleteNoteCommand}" Classes="danger" />
-                    </StackPanel>
+                    <WrapPanel ItemSpacing="8" LineSpacing="8">
+                        <Button Command="{Binding TogglePinCommand}" Classes="secondary">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Pin}" Classes="icon" />
+                                <TextBlock Text="Pin / Unpin" />
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding DeleteNoteCommand}" Classes="danger">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="{x:Static icons:AppIcons.Delete}" Classes="icon" />
+                                <TextBlock Text="Delete" />
+                            </StackPanel>
+                        </Button>
+                    </WrapPanel>
                 </StackPanel>
             </Border>
 

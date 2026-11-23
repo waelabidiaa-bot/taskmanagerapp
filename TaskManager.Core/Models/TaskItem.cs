@@ -10,6 +10,10 @@ public class TaskItem
     public DateTime? DueDate { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    // Presentation value: a task is either pending (0%) or done (100%).
+    // It is not stored in the database.
+    public int ProgressPercent => IsFinished ? 100 : 0;
+
     // Notes written while working on this task.
     public List<Note> Notes { get; set; } = new();
 

@@ -1,21 +1,28 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:TaskManager.UI.ViewModels.Settings"
+             xmlns:icons="using:TaskManager.UI.Icons"
              x:Class="TaskManager.UI.Views.Settings.SettingsView"
              x:DataType="vm:SettingsViewModel"
              x:CompileBindings="True">
 
-    <ScrollViewer>
-        <StackPanel Spacing="14">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="14" MaxWidth="1000" HorizontalAlignment="Center">
 
-            <StackPanel Spacing="4">
-                <TextBlock Text="Settings" Classes="page-title" />
-                <TextBlock Text="Basic information about your workspace." Classes="muted" />
+            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                <PathIcon Data="{x:Static icons:AppIcons.Settings}" Classes="page-icon" Foreground="#60A5FA" />
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Settings" Classes="page-title" />
+                    <TextBlock Text="Basic information about your workspace." Classes="muted" />
+                </StackPanel>
             </StackPanel>
 
             <Border Classes="panel">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Application" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.Settings}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Application" Classes="section-title" />
+                    </StackPanel>
                     <TextBlock Text="Personal Productivity &amp; Learning Manager" />
                     <TextBlock Text="Database file" Classes="field-label" />
                     <TextBlock Text="{Binding DatabaseFile}" />
@@ -24,7 +31,10 @@
 
             <Border Classes="panel">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="Stored data" Classes="section-title" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="{x:Static icons:AppIcons.AllTasks}" Classes="icon" Foreground="#94A3B8" />
+                        <TextBlock Text="Stored data" Classes="section-title" />
+                    </StackPanel>
                     <TextBlock Text="{Binding TaskCount}" />
                     <TextBlock Text="tasks" Classes="muted" />
                     <TextBlock Text="{Binding NoteCount}" />
@@ -33,7 +43,12 @@
                     <TextBlock Text="learning activities" Classes="muted" />
                     <TextBlock Text="{Binding CategoryCount}" />
                     <TextBlock Text="categories" Classes="muted" />
-                    <Button Content="Refresh" Command="{Binding RefreshCommand}" Classes="secondary" />
+                    <Button Command="{Binding RefreshCommand}" Classes="secondary">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="{x:Static icons:AppIcons.Refresh}" Classes="icon" />
+                            <TextBlock Text="Refresh" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Border>
 

@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TaskManager.UI.ViewModels"
+             xmlns:icons="using:TaskManager.UI.Icons"
+             x:Class="TaskManager.UI.Views.Shell.PaneView"
+             x:DataType="vm:PaneViewModel"
+             x:CompileBindings="True">
+
+    <Border Background="#1E293B"
+            BorderBrush="#334155"
+            BorderThickness="1"
+            CornerRadius="12">
+        <DockPanel>
+            <Border DockPanel.Dock="Top"
+                    Height="46"
+                    Padding="12,0,8,0"
+                    BorderBrush="#334155"
+                    BorderThickness="0,0,0,1">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <PathIcon Data="{Binding Icon}" Classes="icon" Foreground="#60A5FA" />
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="#F1F5F9" />
+                    </StackPanel>
+                    <Button Grid.Column="1"
+                            Command="{Binding CloseCommand}"
+                            Classes="pane-close"
+                            ToolTip.Tip="Close panel">
+                        <PathIcon Data="{x:Static icons:AppIcons.Clear}" Classes="icon" />
+                    </Button>
+                </Grid>
+            </Border>
+
+            <ContentControl Content="{Binding ViewModel}" Margin="10" />
+        </DockPanel>
+    </Border>
+</UserControl>
