@@ -1,0 +1,133 @@
+name: Release Linux packages
+
+"on":
+  push:
+    tags:
+      - "v*"
+
+permissions: {}
+
+jobs:
+  release:
+    name: Build and publish Linux x64 release
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
+
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Derive release version from tag
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '$tag' must look like v1.0.0" >&2
+            exit 1
+          fi
+          version="${tag#v}"
+          assembly_version="${version%%[-+]*}.0"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "assembly_version=$assembly_version" >> "$GITHUB_OUTPUT"
+          echo "Releasing $tag as version $version (assembly $assembly_version)"
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install packaging dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            fakeroot \
+            desktop-file-validate \
+            file
+
+      - name: Build packages
+        shell: bash
+        working-directory: .
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: ./packaging/build-linux-packages.sh
+
+      - name: Verify artifacts, checksums and versions
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          ASSEMBLY_VERSION: ${{ steps.version.outputs.assembly_version }}
+        run: |
+          set -euo pipefail
+
+          appimage="release/linux-x64/AppImage/TaskManager-${VERSION}-x86_64.AppImage"
+          deb="release/linux-x64/deb/taskmanager_${VERSION}_amd64.deb"
+
+          for path in \
+            "$appimage" \
+            "$deb" \
+            release/TaskManager-x86_64.AppImage \
+            release/taskmanager_amd64.deb \
+            release/SHA256SUMS \
+            release/RELEASE_README.md; do
+            if [[ ! -f "$path" ]]; then
+              echo "::error::Missing expected artifact: $path" >&2
+              exit 1
+            fi
+          done
+
+          (cd release && sha256sum -c SHA256SUMS)
+
+          deb_version="$(dpkg-deb -f "$deb" Version)"
+          if [[ "$deb_version" != "$VERSION" ]]; then
+            echo "::error::deb version '$deb_version' does not match tag version '$VERSION'" >&2
+            exit 1
+          fi
+
+          inspect_dir="$(mktemp -d)"
+          dpkg-deb --fsys-tarfile "$deb" > "$inspect_dir/package.tar"
+          tar -xOf "$inspect_dir/package.tar" ./opt/taskmanager/TaskManager.UI.dll \
+            > "$inspect_dir/TaskManager.UI.dll"
+          if ! grep -aqF "<assemblyIdentity version=\"${ASSEMBLY_VERSION}\"" \
+            "$inspect_dir/TaskManager.UI.dll"; then
+            echo "::error::Assembly version is not $ASSEMBLY_VERSION" >&2
+            exit 1
+          fi
+          rm -rf "$inspect_dir"
+
+          echo "Verified artifacts and versions for $VERSION"
+
+      - name: Publish GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+
+          assets=(
+            release/TaskManager-x86_64.AppImage
+            release/taskmanager_amd64.deb
+            release/SHA256SUMS
+            release/RELEASE_README.md
+          )
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            gh release create "$TAG" "${assets[@]}" \
+              --title "TaskManager $TAG" \
+              --generate-notes
+          fi

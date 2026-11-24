@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=TaskManager
+GenericName=Task Manager
+Comment=Local-first workspace for goals, projects, tasks and notes
+Exec=taskmanager
+Icon=taskmanager
+Terminal=false
+Categories=Office;Utility;
+Keywords=task;tasks;todo;goals;projects;notes;
+StartupNotify=true
+StartupWMClass=TaskManager.UI
